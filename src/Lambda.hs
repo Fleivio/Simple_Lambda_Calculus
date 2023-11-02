@@ -9,7 +9,7 @@ data Term =
 instance Show Term where
   show t = case t of
     Var x       -> show x
-    Abs t1      -> "λ" ++ show t1 ++ "."
+    Abs t1      -> "λ" ++ show t1
     App t1 t2   -> "(" ++ show t1 ++ " " ++ show t2 ++ ")"
 
 shift :: Int -> Term -> Term
