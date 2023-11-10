@@ -1,6 +1,8 @@
 module Main (main) where
 
-import LambdaTypes
+import qualified Parser.ParserLambda as P
 
 main :: IO ()
-main = print $ eval $ (lTrue `App` (Var 10)) `App` (Var 20)
+main = do
+    a <- readFile "input/input4"  
+    print $ P.parseFull a
