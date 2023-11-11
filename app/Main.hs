@@ -11,4 +11,4 @@ main = do
     -- print $ eval' $ P.parseFull a
 
 testExp :: IO()
-testExp = print $ eval' $ LamApp (LamApp (LamApp lIf lFalse) (LamVar 'h')) (LamVar 'j')
+testExp = print $ eval' $ app (app (app lIf lFalse) (vr 'h')) (vr 'j')

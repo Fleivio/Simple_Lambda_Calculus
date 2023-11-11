@@ -1,8 +1,21 @@
-module Lam(LamExp(..), freevars, remove, subs, eval') where
+module Lam(LamExp(..), (->>), λ, vr, app, freevars, remove, subs, eval') where
 
 data LamExp = LamVar Char
             | LamAbs Char LamExp
             | LamApp LamExp LamExp deriving(Eq)
+
+(->>) :: Char -> LamExp -> LamExp
+a ->> b = LamAbs a b
+infixr 1 ->>
+
+λ :: Char -> LamExp -> LamExp
+λ = (->>)
+
+vr :: Char -> LamExp
+vr = LamVar
+
+app :: LamExp -> LamExp -> LamExp
+app = LamApp
 
 instance Show LamExp where
     show (LamVar x) = [x]

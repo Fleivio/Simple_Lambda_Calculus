@@ -10,16 +10,6 @@ module Defines(
 
 import Lam
 
-(->>) :: Char -> LamExp -> LamExp
-a ->> b = LamAbs a b
-infixr 1 ->>
-
-vr :: Char -> LamExp
-vr = LamVar
-
-app :: LamExp -> LamExp -> LamExp
-app = LamApp
-
 ---[Logic]-----------------------------------------------------------------------
 
 lId :: LamExp
