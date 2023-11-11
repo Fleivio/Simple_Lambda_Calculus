@@ -1,8 +1,13 @@
-module Lam(LamExp(..), freevars, remove, subs) where
+module Lam(LamExp(..), freevars, remove, subs, eval') where
 
 data LamExp = LamVar Char
             | LamAbs Char LamExp
-            | LamApp LamExp LamExp deriving(Show,Eq)
+            | LamApp LamExp LamExp deriving(Eq)
+
+instance Show LamExp where
+    show (LamVar x) = [x]
+    show (LamAbs x t1) = "λ" ++ [x] ++ "." ++ show t1
+    show (LamApp t1 t2) = "(" ++ show t1 ++ " " ++ show t2 ++ ")"
 
 freevars :: LamExp -> [Char]
 freevars ex = case ex of
@@ -27,11 +32,15 @@ subs x s (LamAbs y t2) | x == y
 
 subs x s (LamApp t1 t2) = LamApp (subs x s t1) (subs x s t2)
 
-isVal :: LamExp -> Bool
-isVal = undefined
-
 eval :: LamExp -> LamExp
-eval _ = undefined
+eval ex = case ex of
+        (LamApp (LamAbs x t1) t2) -> subs x (eval t2) (eval t1)
+        (LamApp t1 t2)            -> LamApp (eval t1) (eval t2)
+        _ -> ex
+
+eval' :: LamExp -> LamExp
+eval' e | e /= eval e = eval' . eval $ e
+        | otherwise   = eval e
 
 ----------------------------------------------------------------------------
 
