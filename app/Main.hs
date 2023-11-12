@@ -4,9 +4,17 @@ import qualified Parser.ParserLambda as P
 import Lam
 import Defines
 
+evaluatorRunner :: IO ()
+evaluatorRunner = do
+    putStr ">"
+    a <- getLine
+    print . eval' . P.parseFull $ a
+    evaluatorRunner
+
 main :: IO ()
 main = do
-    testExp
+    evaluatorRunner
+    -- testExp
     -- a <- readFile "input/input4"  
     -- print $ eval' $ P.parseFull a
 

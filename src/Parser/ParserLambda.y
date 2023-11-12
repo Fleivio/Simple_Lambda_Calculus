@@ -16,6 +16,7 @@ import Parser.Lexer
 	')' { TokenCB }
 
 %right '.'
+%nonassoc lam var '(' ')'
 %left APP	
 
 %%

@@ -15,7 +15,7 @@ data HappyAbsSyn t4
 	| HappyAbsSyn4 t4
 
 happyExpList :: Happy_Data_Array.Array Prelude.Int Prelude.Int
-happyExpList = Happy_Data_Array.listArray (0,26) ([32944,0,8236,704,4123,49152,2,0,0
+happyExpList = Happy_Data_Array.listArray (0,26) ([32944,0,8236,704,4123,49152,2,44,0
 	])
 
 {-# NOINLINE happyExpListPerState #-}
@@ -68,9 +68,6 @@ action_6 _ = happyFail (happyExpListPerState 6)
 action_7 (7) = happyShift action_9
 action_7 _ = happyFail (happyExpListPerState 7)
 
-action_8 (5) = happyShift action_4
-action_8 (6) = happyShift action_2
-action_8 (8) = happyShift action_5
 action_8 (4) = happyGoto action_8
 action_8 _ = happyReduce_3
 
