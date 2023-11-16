@@ -18,5 +18,6 @@ lexer (c:cs)
     | c == '('  = TokenOB : lexer cs
     | c == ')'  = TokenCB : lexer cs
     | isAlpha c = let (a,rest) = span isAlpha (c:cs)
-                  in if (a == "lam") then TokenLam : lexer rest
-                     else (TokenVar c) : lexer rest 
+                  in case a of
+                      "lam" -> TokenLam : lexer rest
+                      _     -> (TokenVar c) : lexer rest 

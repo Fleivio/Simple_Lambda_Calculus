@@ -39,6 +39,7 @@ library
   build-depends:
       array
     , base >=4.7 && <5
+    , mtl
   default-language: Haskell2010
 
 executable lambdaCalculus-exe
@@ -54,6 +55,7 @@ executable lambdaCalculus-exe
       array
     , base >=4.7 && <5
     , lambdaCalculus
+    , mtl
   default-language: Haskell2010
 
 test-suite lambdaCalculus-test
@@ -70,4 +72,5 @@ test-suite lambdaCalculus-test
       array
     , base >=4.7 && <5
     , lambdaCalculus
+    , mtl
   default-language: Haskell2010

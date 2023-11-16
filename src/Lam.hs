@@ -1,8 +1,11 @@
-module Lam(LamExp(..), (->>), λ, vr, app, freevars, remove, subs, eval') where
+module Lam(LamExp(..), (->>), λ, vr, app, eval, evalPrint, evalW) where
+
+import Control.Monad.Writer
 
 data LamExp = LamVar Char
             | LamAbs Char LamExp
-            | LamApp LamExp LamExp deriving(Eq)
+            | LamApp LamExp LamExp 
+             deriving(Eq)
 
 (->>) :: Char -> LamExp -> LamExp
 a ->> b = LamAbs a b
@@ -19,7 +22,7 @@ app = LamApp
 
 instance Show LamExp where
     show (LamVar x) = [x]
-    show (LamAbs x t1) = "λ" ++ [x] ++ "." ++ show t1
+    show (LamAbs x t1) = "\\" ++ [x] ++ "." ++ show t1
     show (LamApp t1 t2) = "((" ++ show t1 ++ ") " ++ show t2 ++ ")" 
 
 freevars :: LamExp -> [Char]
@@ -63,16 +66,38 @@ isVal :: LamExp -> Bool
 isVal (LamApp _ _ ) = False
 isVal _ = True
 
-eval :: LamExp -> LamExp
-eval ex = case ex of
-        (LamApp (LamAbs x t1) v2)
-                | isVal v2 -> subs x v2 t1
-        LamApp t1 t2 -> LamApp (eval t1) (eval t2)
-        a -> a
+type ExpW = Writer [String] LamExp
 
-eval' :: LamExp -> LamExp
-eval' e | e /= eval e = eval' . eval $ e
-        | otherwise   = eval e
+eval' :: LamExp -> ExpW
+eval' ex = case ex of
+        (LamApp (LamAbs x t1) v2)
+                | isVal v2 -> do 
+                        tell [show ex ++ " betaReduction"]
+                        return $ subs x v2 t1
+        LamApp t1 t2 -> do 
+                        tell [show ex]
+                        e1 <- eval' t1
+                        e2 <- eval' t2
+                        return $ LamApp e1 e2
+        a -> return a
+
+evalW :: LamExp -> ExpW
+evalW e = do 
+        ne <- eval' e
+        if e /= ne 
+        then  evalW ne
+        else  eval' e
+
+evalPrint :: LamExp -> IO ()
+evalPrint ex = do
+        let (v, log') = runWriter $ evalW ex 
+        putStrLn $ unlines log'
+        print v
+
+eval :: LamExp -> LamExp
+eval ex = 
+        let (v, _) = runWriter $ evalW ex 
+        in v
 
 ----------------------------------------------------------------------------
 
