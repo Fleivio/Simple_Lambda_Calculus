@@ -1,134 +1,227 @@
-module Defines(
-    lId, lFalse, lTrue,
-    lIf, lNot, lAnd, lOr, lXor,
-    
-    lZero, lOne, lSum, lSucc, lMult, lPow,
-    lPred, lSub, lIsZro, lEq,
+module Defines
+  ( lId,
+    lFalse,
+    lTrue,
+    lIf,
+    lNot,
+    lAnd,
+    lOr,
+    lXor,
+    lZero,
+    lOne,
+    lSum,
+    lSucc,
+    lMult,
+    lPow,
+    lPred,
+    lSub,
+    lIsZro,
+    lEq,
+    lPair,
+    lFst,
+    lLst,
+  )
+where
 
-    lPair, lFst, lLst
-    ) where
-
-import Lam
+import NamelessLam
 
 ---[Logic]-----------------------------------------------------------------------
 
-lId :: LamExp
-lId = 'a' ->>
-             vr 'a'
+lId :: Exp
+lId = Abs (Var 0)
 
-lFalse :: LamExp
-lFalse = 'a' ->>
-         'b' ->>
-            vr 'b'
+lFalse :: Exp
+lFalse =
+  Abs
+    ( -- 1
+      Abs -- 0
+        (Var 0)
+    )
 
-lTrue :: LamExp
-lTrue =  'a' ->>
-         'b' ->>
-            vr 'a'
+lTrue :: Exp
+lTrue =
+  Abs
+    ( Abs
+        (Var 1)
+    )
 
-lIf :: LamExp
-lIf = 'a' ->>
-      'b' ->>
-      'c' ->>
-        app (app (vr 'a') (vr 'b') ) (vr 'c')
+lIf :: Exp
+lIf =
+  Abs
+    ( -- 2
+      Abs
+        ( -- 1
+          Abs -- 0
+            (App (App (Var 2) (Var 1)) (Var 0))
+        )
+    )
 
-lNot :: LamExp
-lNot = 'a' ->>
-        app (app (app lIf (vr 'a')) lFalse ) lTrue
+lNot :: Exp
+lNot =
+  Abs -- 0
+    (App (App (App lIf (Var 0)) lFalse) lTrue)
 
-lAnd :: LamExp
-lAnd =   'a' ->>
-         'b' ->>
-            app (app (app lIf (vr 'b')) (vr 'a')) lFalse
+lAnd :: Exp
+lAnd =
+  Abs
+    ( -- 1
+      Abs
+        ( -- 0
+          App (App (App lIf (Var 0)) (Var 1)) lFalse
+        )
+    )
 
-lOr :: LamExp
-lOr =  'a' ->>
-       'b' ->>
-            app (app (app lIf (vr 'b')) lTrue) (vr 'a')
+lOr :: Exp
+lOr =
+  Abs
+    ( -- 1
+      Abs
+        ( -- 0
+          App (App (App lIf (Var 0)) lTrue) (Var 1)
+        )
+    )
 
-lXor :: LamExp
-lXor = 'a' ->>
-       'b' ->>
-            app (app (vr 'a') (app lNot (vr 'b')) ) (vr 'b')
+lXor :: Exp
+lXor =
+  Abs
+    ( -- 1
+      Abs
+        ( -- 0
+          App (App (Var 1) (lNot `App` (Var 0))) (Var 0)
+        )
+    )
 
 ---[Numeric]-----------------------------------------------------------------------------
 
-lZero :: LamExp
+lZero :: Exp
 lZero = lFalse
 
-lOne :: LamExp
-lOne = 'f' ->>
-       'z' ->> 
-            app (vr 'f') (vr 'z')
+lOne :: Exp
+lOne =
+  Abs
+    ( -- f
+      Abs
+        ( -- z
+          App (Var 1) (Var 0)
+        )
+    )
 
-lSum :: LamExp
-lSum = 'n' ->>
-       'm' ->>
-       'f' ->>
-       'z' ->>
-        app
-            (app (vr 'n') (vr 'f') )
-            (app (app (vr 'm') (vr 'f')) (vr 'z'))
+lSum :: Exp
+lSum =
+  Abs
+    ( -- 3 n2
+      Abs
+        ( -- 2 n1
+          Abs
+            ( -- 1 succ
+              Abs
+                ( -- 0 zero
+                  App
+                    (App (Var 3) (Var 1))
+                    (App (App (Var 2) (Var 1)) (Var 0))
+                )
+            )
+        )
+    )
 
-lSucc :: LamExp
-lSucc = 'n' ->>
-        'f' ->>
-        'z' ->>
-            app (vr 'f') (app (app (vr 'n') (vr 'f')) (vr 'z') )
+lSucc :: Exp
+lSucc =
+  Abs
+    ( -- 2 n
+      Abs
+        ( -- 1 s
+          Abs
+            ( -- 0 z
+              App (Var 1) (App (App (Var 2) (Var 1)) (Var 0))
+            )
+        )
+    )
 
-lMult :: LamExp
-lMult = 'n' ->>
-        'f' ->>
-        'z' ->>
-            app (vr 'n') (app (vr 'f') (vr 'z'))
+lMult :: Exp
+lMult =
+  Abs
+    ( Abs
+        ( Abs
+            ( App (Var 2) (App (Var 1) (Var 0))
+            )
+        )
+    )
 
-lPow :: LamExp
-lPow = 'f' ->>
-       'z' ->>
-            app (vr 'f') (vr 'z')
+lPow :: Exp
+lPow =
+  Abs
+    ( -- f
+      Abs
+        ( -- z
+          App (Var 1) (Var 0)
+        )
+    )
 
-lIsZro :: LamExp
-lIsZro = 'n' ->>
-            app (app (vr 'n') (LamAbs '_' lFalse)) lTrue
+_zz :: Exp
+_zz = App (App lPair lZero) lZero
 
+_ss :: Exp
+_ss =
+  Abs
+    ( App
+        (App lPair (App lLst (Var 0)))
+        (App lSucc (App lLst (Var 0)))
+    )
 
-_zz :: LamExp
-_zz = app (app lPair lZero) lZero
+lPred :: Exp
+lPred =
+  Abs
+    ( App lFst (App (App (Var 0) _ss) _zz)
+    )
 
-_ss :: LamExp
-_ss = 'a' ->>
-        app
-            (app lPair (app lLst (vr 'a')))
-            (app lSucc (app lLst (vr 'a')))
+lSub :: Exp
+lSub =
+  Abs
+    ( Abs
+        ( App (App (Var 0) lPred) (Var 1)
+        )
+    )
 
-lPred :: LamExp
-lPred = 'n' ->>
-            app lFst (app (app (vr 'n') _ss) _zz)
+lIsZro :: Exp
+lIsZro =
+  Abs
+    ( App (App (Var 0) (Abs lFalse)) lTrue
+    )
 
-lSub :: LamExp
-lSub = 'n' ->>
-       'm' ->>
-            app (app (vr 'm') lPred) (vr 'n')
-
-lEq :: LamExp
-lEq = 'n' ->>
-      'm' ->>
-        app (app lAnd
-                (app lIsZro (app (app lSub (vr 'm')) (vr 'n'))))
-                (app lIsZro (app (app lSub (vr 'n')) (vr 'm')))
+lEq :: Exp
+lEq =
+  Abs
+    ( Abs
+        ( ( App
+              ( App
+                  lAnd
+                  (App lIsZro (App (App lSub (Var 0)) (Var 1)))
+              )
+              (App lIsZro (App (App lSub (Var 1)) (Var 0)))
+          )
+        )
+    )
 
 ---[Pair]-----------------------------------------------------------------
 
-lPair :: LamExp
-lPair = 'a' ->>
-        'b' ->>
-        'c' ->>
-            app (app (vr 'c') (vr 'a')) (vr 'b')
+lPair :: Exp
+lPair =
+  Abs
+    ( Abs
+        ( Abs
+            ( App (App (Var 0) (Var 2)) (Var 1)
+            )
+        )
+    )
 
-lLst :: LamExp
-lLst = 'a' ->>
-            app (vr 'a') lFalse
+lLst :: Exp
+lLst =
+  Abs
+    ( App (Var 0) lFalse
+    )
 
-lFst :: LamExp
-lFst = 'a' ->>
-            app (vr 'a') lTrue
+lFst :: Exp
+lFst =
+  Abs
+    ( App (Var 0) lTrue
+    )
