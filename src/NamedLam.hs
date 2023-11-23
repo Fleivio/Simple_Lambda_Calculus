@@ -1,4 +1,6 @@
-module NamedLam (LamExp (..), eval) where
+module NamedLam (LamExp (..), module Exp) where
+
+import Exp
 
 data LamExp = 
 		LamVar Char
@@ -12,13 +14,13 @@ instance Show LamExp where
   show (LamApp t1 t2) = "((" ++ show t1 ++ ") " ++ show t2 ++ ")"
 
 freevars :: LamExp -> [Char]
-freevars ex = case ex of
+freevars = \case
   (LamVar x)     -> [x]
   (LamAbs x t1)  -> remove (freevars t1) x
   (LamApp t1 t2) -> freevars t1 ++ freevars t2
 
 boundvars :: LamExp -> [Char]
-boundvars ex = case ex of
+boundvars = \case
   (LamVar _)     -> []
   (LamAbs x t1)  -> x : boundvars t1
   (LamApp t1 t2) -> freevars t1 <> freevars t2
@@ -50,21 +52,18 @@ isVal :: LamExp -> Bool
 isVal (LamApp _ _) = False
 isVal _ = True
 
-evalStep :: LamExp -> LamExp
-evalStep ex = case ex of
-  (LamApp (LamAbs x t1) v2)
-    | isVal v2 -> subs x v2 t1
-  LamApp t1 t2 -> LamApp (evalStep t1) (evalStep t2)
-  a            -> a
+instance Exp LamExp where
+  evalStep = \case
+    (LamApp (LamAbs x t1) v2)
+      | isVal v2 -> subs x v2 t1
+    LamApp t1 t2 -> LamApp (evalStep t1) (evalStep t2)
+    a            -> a
 
-eval :: LamExp -> LamExp
-eval e | e == evalStep e = e 
-			 | otherwise       = eval . evalStep $ e 
 ----------------------------------------------------------------------------
 
-tru = LamAbs 't' (LamAbs 'f' (LamVar 't'))
-fls = LamAbs 't' (LamAbs 'f' (LamVar 'f'))
-test = LamAbs 'l' (LamAbs 'm' (LamAbs 'n' (LamApp (LamApp (LamVar 'l') (LamVar 'm')) (LamVar 'n'))))
+-- tru = LamAbs 't' (LamAbs 'f' (LamVar 't'))
+-- fls = LamAbs 't' (LamAbs 'f' (LamVar 'f'))
+-- test = LamAbs 'l' (LamAbs 'm' (LamAbs 'n' (LamApp (LamApp (LamVar 'l') (LamVar 'm')) (LamVar 'n'))))
 
 ---------------------------------------------------------
 -- liberação de variavel

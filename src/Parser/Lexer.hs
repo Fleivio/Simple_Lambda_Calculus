@@ -13,7 +13,6 @@ data Token
 lexer :: String -> [Token]
 lexer [] = []
 lexer (c:cs)
-    | isSpace c = lexer cs
     | c == '.'  = TokenPoint : lexer cs
     | c == '('  = TokenOB : lexer cs
     | c == ')'  = TokenCB : lexer cs
@@ -21,3 +20,4 @@ lexer (c:cs)
                   in case a of
                       "lam" -> TokenLam : lexer rest
                       _     -> (TokenVar c) : lexer rest 
+    | otherwise = lexer cs

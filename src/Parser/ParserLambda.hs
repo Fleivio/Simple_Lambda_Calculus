@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -w #-}
 module Parser.ParserLambda(parserlamb, parseFull) where
-import Lam
+import NamedLam
 import Parser.Lexer
 import qualified Data.Array as Happy_Data_Array
 import qualified Data.Bits as Bits

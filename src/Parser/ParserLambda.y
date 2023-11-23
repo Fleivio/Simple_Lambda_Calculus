@@ -1,6 +1,6 @@
 {
 module Parser.ParserLambda(parserlamb, parseFull) where
-import Lam
+import NamedLam
 import Parser.Lexer
 }
 
