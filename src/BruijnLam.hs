@@ -41,6 +41,5 @@ instance Exp BLamExp where
     evalStep = \case
         (App (Abs b) t2)
             | isVal t2   -> betaReduction t2 b
-        (App t1 t2) | isVal t1 -> t1 `App` evalStep t2
-                    | isVal t2 -> evalStep t1 `App` t2
+        (App t1 t2)      -> evalStep t1 .: evalStep t2
         a                -> a

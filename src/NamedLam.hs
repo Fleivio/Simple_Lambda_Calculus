@@ -58,18 +58,3 @@ instance Exp LamExp where
       | isVal v2 -> subs x v2 t1
     LamApp t1 t2 -> LamApp (evalStep t1) (evalStep t2)
     a            -> a
-
-----------------------------------------------------------------------------
-
--- tru = LamAbs 't' (LamAbs 'f' (LamVar 't'))
--- fls = LamAbs 't' (LamAbs 'f' (LamVar 'f'))
--- test = LamAbs 'l' (LamAbs 'm' (LamAbs 'n' (LamApp (LamApp (LamVar 'l') (LamVar 'm')) (LamVar 'n'))))
-
----------------------------------------------------------
--- liberação de variavel
-_test1 :: LamExp
-_test1 = subs 'x' (LamVar 'y') (LamAbs 'x' (LamVar 'y'))
-
--- captura de variavel
-_test2 :: LamExp
-_test2 = subs 'x' (LamVar 'z') (LamAbs 'z' (LamVar 'x'))
