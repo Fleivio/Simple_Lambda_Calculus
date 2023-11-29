@@ -38,9 +38,20 @@ isVal (App _ _) = False
 isVal _ = True
 
 instance Exp BLamExp where 
-    evalStep = \case
-        (App t@(Abs b) t2)
-            | isVal t2   -> betaReduction t2 b
-            | otherwise  -> App t (evalStep t2)
-        (App t1 t2)      -> evalStep t1 .: t2
+    callByValue = \case
+        App p@(Abs t) v
+            | isVal v    -> betaReduction v t
+            | otherwise  -> App p (callByValue v)
+        App t1 t2        -> callByValue t1 .: t2
         a                -> a
+
+    fullBeta = \case
+        App (Abs b) t -> betaReduction t b
+        App t       p -> App (fullBeta t) (fullBeta p)
+        Abs b         -> Abs (fullBeta b)
+        a             -> a
+
+    callByName = \case
+        App (Abs b) t -> betaReduction t b 
+        App t       p -> App (callByName t) p
+        a             -> a

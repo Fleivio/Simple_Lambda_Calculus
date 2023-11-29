@@ -53,9 +53,20 @@ isVal (LamApp _ _) = False
 isVal _ = True
 
 instance Exp LamExp where
-  evalStep = \case
-    (LamApp t@(LamAbs x t1) v)
-      | isVal v   -> subs x v t1
-      | otherwise -> LamApp t (eval v) 
-    LamApp t1 t2  -> LamApp (evalStep t1) t2
+  callByValue = \case
+    LamApp p@(LamAbs x t) v
+      | isVal v   -> subs x v t
+      | otherwise -> LamApp p (callByValue v) 
+    LamApp t1 t2  -> LamApp (callByValue t1) t2
     a             -> a
+
+  fullBeta = \case
+    LamApp (LamAbs x t) v -> subs x v t
+    LamApp t            p -> LamApp (fullBeta t) (fullBeta p)
+    LamAbs x            t -> LamAbs x (fullBeta t)
+    x                     -> x
+
+  callByName = \case
+    LamApp (LamAbs x t) v -> subs x v t
+    LamApp t            p -> LamApp (callByName t) p
+    a                     -> a
