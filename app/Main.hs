@@ -1,34 +1,34 @@
 module Main (main) where
 
--- import qualified Parser.ParserLambda as P
--- import NamedLam
-
--- evaluatorRunner :: IO ()
--- evaluatorRunner = do
---     putStr ">"
---     a <- getLine
---     evalPrint . P.parseFull $ a
---     evaluatorRunner
-
+import qualified Parser.ParserLambda as P
 import BruijnLam
 import NamedLam
 import Defines
 import Conversor
 
+evaluatorRunner :: IO ()
+evaluatorRunner = do
+    putStr ">"
+    a <- getLine
+    evalPrint . P.parseFull $ a
+    evaluatorRunner
+
+
 main :: IO ()
 main = do
-    print $ convert lIf
-    print $ convert lOne
-    print $ convert lSum
+    -- evaluatorRunner
+    evalPrint b1
+    evalPrint $ convert b1
 
-    print $ convert t1
-    -- evalPrint b1
-    -- evalPrint b2
-    -- evalPrint b3
-    -- evalPrint t2
+    evalPrint b2
+    evalPrint $ convert b2
+
+    evalPrint b3
+    evalPrint $ convert b3
 
 
-b1 = App (App (App lIf lTrue) (Var 100)) (Var 10000)
+
+b1 = App (App (App lIf lTrue) (Var 10)) (Var 1000)
 b2 = App (App lSum lOne) lOne
 b3 = App (App lPow (lN 4)) lTwo
 

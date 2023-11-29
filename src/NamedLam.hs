@@ -54,7 +54,8 @@ isVal _ = True
 
 instance Exp LamExp where
   evalStep = \case
-    (LamApp (LamAbs x t1) v2)
-      | isVal v2 -> subs x v2 t1
-    LamApp t1 t2 -> LamApp (evalStep t1) (evalStep t2)
-    a            -> a
+    (LamApp t@(LamAbs x t1) v)
+      | isVal v   -> subs x v t1
+      | otherwise -> LamApp t (eval v) 
+    LamApp t1 t2  -> LamApp (evalStep t1) t2
+    a             -> a

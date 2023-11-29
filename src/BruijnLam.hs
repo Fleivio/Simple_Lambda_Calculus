@@ -27,7 +27,7 @@ subst :: Int -> BLamExp -> BLamExp -> BLamExp
 subst j s = \case 
     (Var k) | k == j    -> s
             | otherwise -> Var k
-    (Abs t1)   -> Abs $ subst (j+1) (shift 0 1 s) t1
+    (Abs t1)   -> Abs $ subst (j + 1) (shift 0 1 s) t1
     App t1 t2  -> subst j s t1 `App` subst j s t2
 
 betaReduction :: BLamExp -> BLamExp -> BLamExp
@@ -39,7 +39,8 @@ isVal _ = True
 
 instance Exp BLamExp where 
     evalStep = \case
-        (App (Abs b) t2)
+        (App t@(Abs b) t2)
             | isVal t2   -> betaReduction t2 b
-        (App t1 t2)      -> evalStep t1 .: evalStep t2
+            | otherwise  -> App t (evalStep t2)
+        (App t1 t2)      -> evalStep t1 .: t2
         a                -> a

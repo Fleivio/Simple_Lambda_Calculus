@@ -19,7 +19,7 @@ class (Eq e, Show e) => Exp e where
 
     evalPrint :: e -> IO ()
     evalPrint e = do
-        let (e1, s) = runWriter $ evalShow e
+        let (_, s) = runWriter $ evalShow e
         putStrLn $ unlines s
 
     eval :: e -> e
