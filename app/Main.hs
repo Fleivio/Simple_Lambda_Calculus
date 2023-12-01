@@ -15,27 +15,21 @@ evaluatorRunner f = do
     evalPrint f $ P.parseFull a
     evaluatorRunner f
 
-
 main :: IO ()
 main = do
+    let test = a0
     -- evaluatorRunner
     putStrLn "Call By Name:"
-    evalPrint callByName $ convert a0
-    evalPrint callByName a0
+    evalPrint callByName $ convert test
+    evalPrint callByName test
 
     putStrLn "Call By Value:"
-    evalPrint callByValue $ convert a0
-    evalPrint callByValue a0
+    evalPrint callByValue $ convert test
+    evalPrint callByValue test
 
     putStrLn "Full Beta:"
-    evalPrint fullBeta $ convert a0
-    evalPrint fullBeta a0
-
-    -- evalPrint b2
-    -- evalPrint $ convert b2
-
-    -- evalPrint b3
-    -- evalPrint $ convert b3
+    evalPrint fullBeta $ convert test
+    evalPrint fullBeta test
 
 a0 = lId .: (lId .: (Abs (lId .: Var 0)))
 
@@ -45,3 +39,8 @@ b3 = App (App lPow (lN 4)) lTwo `App` Var 0 `App` Var 1
 
 t1 = LamAbs 'a' (LamAbs 'b' (LamVar 'a'))
 t2 = LamApp (LamApp (LamAbs 'i' (LamAbs 'j' (LamVar 'i')) ) (LamVar 'x')) (LamVar 'y')
+
+captura = LamAbs 'y' $ LamAbs 'x' (LamAbs 'y' (LamVar 'x')) `LamApp` LamVar 'y'
+captura2 = LamAbs 'y' $ LamAbs 'x' (LamAbs 'y' (LamVar 'x')) `LamApp` LamAbs 'k' (LamVar 'y')
+
+liberacao = LamAbs 'x' $ LamAbs 'y' (LamAbs 'x' (LamVar 'y')) `LamApp` LamVar 'x'
