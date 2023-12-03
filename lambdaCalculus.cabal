@@ -7,8 +7,8 @@ cabal-version: 2.2
 name:           lambdaCalculus
 version:        0.1.0.0
 description:    Please see the README on GitHub at <https://github.com/githubuser/lambdaCalculus#readme>
-homepage:       https://github.com/githubuser/lambdaCalculus#readme
-bug-reports:    https://github.com/githubuser/lambdaCalculus/issues
+homepage:       https://github.com/Fleivio/lambdaCalculus#readme
+bug-reports:    https://github.com/Fleivio/lambdaCalculus/issues
 author:         Author name here
 maintainer:     example@example.com
 copyright:      2023 Author name here
@@ -21,7 +21,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/lambdaCalculus
+  location: https://github.com/Fleivio/lambdaCalculus
 
 library
   exposed-modules:

@@ -1,10 +1,10 @@
 name:                lambdaCalculus
 version:             0.1.0.0
-github:              "githubuser/lambdaCalculus"
+github:              "Fleivio/lambdaCalculus"
 license:             BSD-3-Clause
-author:              "Author name here"
+author:              "Fleivio"
 maintainer:          "example@example.com"
-copyright:           "2023 Author name here"
+copyright:           "2023 Fleivio"
 
 extra-source-files:
 - README.md

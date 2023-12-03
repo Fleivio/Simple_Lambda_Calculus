@@ -170,8 +170,6 @@ parseError b = error "Parse Error"
 
 parseFull :: String -> LamExp
 parseFull = parserlamb . lexer
-
-main = getContents >>= print . parserlamb . lexer
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 -- $Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp $
 

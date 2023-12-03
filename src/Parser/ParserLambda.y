@@ -22,8 +22,8 @@ import Parser.Lexer
 %%
 
 Term : var                   { LamVar $1 }
-	 | lam var  '.' Term     { LamAbs $2 $4}
-	 | Term Term  %prec APP  { LamApp $1 $2 }
+	 | lam var  '.' Term     { LamAbs $2 $4 }
+	 | Term Term %prec APP   { LamApp $1 $2 }
 	 | '(' Term ')'          { $2 }
 
 {
@@ -34,5 +34,4 @@ parseError b = error "Parse Error"
 parseFull :: String -> LamExp
 parseFull = parserlamb . lexer
 
-main = getContents >>= print . parserlamb . lexer
 }
