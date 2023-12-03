@@ -4,6 +4,8 @@ import Control.Monad.Writer
 
 class (Eq e, Show e) => Exp e where
 
+	(·) :: e -> e -> e
+
 	evalStepShow :: (e -> e) -> e -> Writer [String] e
 	evalStepShow f e = do
 		tell [show e]
@@ -33,4 +35,4 @@ class (Eq e, Show e) => Exp e where
 
 	eval :: (e -> e) -> e -> e
 	eval f e | e == f e  = e
-					 | otherwise = eval f $ f e
+			 | otherwise = eval f $ f e

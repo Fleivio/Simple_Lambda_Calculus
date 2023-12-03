@@ -10,37 +10,37 @@ import Conversor
 
 evaluatorRunner :: (LamExp -> LamExp) -> IO ()
 evaluatorRunner f = do
-    putStr ">"
-    a <- getLine
-    evalPrint f $ P.parseFull a
-    evaluatorRunner f
+	putStr ">"
+	a <- getLine
+	evalPrint f $ P.parseFull a
+	evaluatorRunner f
 
 main :: IO ()
 main = do
-    let test = a0
-    -- evaluatorRunner
-    putStrLn "Call By Name:"
-    evalPrint callByName $ convert test
-    evalPrint callByName test
+	let test = b3
+	-- evaluatorRunner
+	putStrLn "Call By Name:"
+	evalPrint callByName $ convert test
+	evalPrint callByName test
 
-    putStrLn "Call By Value:"
-    evalPrint callByValue $ convert test
-    evalPrint callByValue test
+	putStrLn "Call By Value:"
+	evalPrint callByValue $ convert test
+	evalPrint callByValue test
 
-    putStrLn "Full Beta:"
-    evalPrint fullBeta $ convert test
-    evalPrint fullBeta test
+	putStrLn "Full Beta:"
+	evalPrint fullBeta $ convert test
+	evalPrint fullBeta test
 
-a0 = lId .: (lId .: (Abs (lId .: Var 0)))
+a0 = lId · (lId · (Abs (lId · Var 0)))
 
-b1 = App (App (App lIf lTrue) (Var 10)) (Var 1000)
-b2 = App (App lSum lOne) lOne
-b3 = App (App lPow (lN 4)) lTwo `App` Var 0 `App` Var 1
+b1 = lIf · lTrue · Var 10 · Var 1000
+b2 = lSum · lOne · lOne
+b3 = lPow · lN 4 · lTwo · Var 0 · Var 1
 
-t1 = LamAbs 'a' (LamAbs 'b' (LamVar 'a'))
-t2 = LamApp (LamApp (LamAbs 'i' (LamAbs 'j' (LamVar 'i')) ) (LamVar 'x')) (LamVar 'y')
+t1 = NAbs 'a' (NAbs 'b' (NVar 'a'))
+t2 = NAbs 'i' (NAbs 'j' (NVar 'i')) · (NVar 'x') · (NVar 'y')
 
-captura = LamAbs 'y' $ LamAbs 'x' (LamAbs 'y' (LamVar 'x')) `LamApp` LamVar 'y'
-captura2 = LamAbs 'y' $ LamAbs 'x' (LamAbs 'y' (LamVar 'x')) `LamApp` LamAbs 'k' (LamVar 'y')
+captura = NAbs 'y' $ NAbs 'x' (NAbs 'y' (NVar 'x')) · NVar 'y'
+captura2 = NAbs 'y' $ NAbs 'x' (NAbs 'y' (NVar 'x')) · NAbs 'k' (NVar 'y')
 
-liberacao = LamAbs 'x' $ LamAbs 'y' (LamAbs 'x' (LamVar 'y')) `LamApp` LamVar 'x'
+liberacao = NAbs 'x' $ NAbs 'y' (NAbs 'x' (NVar 'y')) · NVar 'x'

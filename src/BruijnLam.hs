@@ -1,4 +1,4 @@
-module BruijnLam(BLamExp(..), (.:), module Exp) where
+module BruijnLam(BLamExp(..), module Exp) where
 
 import Exp
 
@@ -7,9 +7,6 @@ data BLamExp =
 	| App BLamExp BLamExp
 	| Abs BLamExp
 	deriving (Eq)
-
-(.:) :: BLamExp -> BLamExp -> BLamExp
-a .: b = a `App` b
 
 instance Show BLamExp where
 	show = \case
@@ -39,11 +36,13 @@ isVal (App _ _) = False
 isVal _ = True
 
 instance Exp BLamExp where 
+	(·) = App
+
 	callByValue = \case
 		App p@(Abs t) v
 				| isVal v    -> betaRed v t
 				| otherwise  -> App p (callByValue v)
-		App t1 t2        -> callByValue t1 .: t2
+		App t1 t2        -> callByValue t1 · t2
 		a                -> a
 
 	fullBeta = \case

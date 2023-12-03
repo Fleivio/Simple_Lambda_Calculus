@@ -21,9 +21,9 @@ import Parser.Lexer
 
 %%
 
-Term : var                   { LamVar $1 }
-	 | lam var  '.' Term     { LamAbs $2 $4 }
-	 | Term Term %prec APP   { LamApp $1 $2 }
+Term : var                   { NVar $1 }
+	 | lam var  '.' Term     { NAbs $2 $4 }
+	 | Term Term %prec APP   { NApp $1 $2 }
 	 | '(' Term ')'          { $2 }
 
 {

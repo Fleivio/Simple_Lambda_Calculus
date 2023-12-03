@@ -88,7 +88,7 @@ action_11 _ = happyReduce_2
 happyReduce_1 = happySpecReduce_1  4 happyReduction_1
 happyReduction_1 (HappyTerminal (TokenVar happy_var_1))
 	 =  HappyAbsSyn4
-		 (LamVar happy_var_1
+		 (NVar happy_var_1
 	)
 happyReduction_1 _  = notHappyAtAll 
 
@@ -99,14 +99,14 @@ happyReduction_2 ((HappyAbsSyn4  happy_var_4) `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn4
-		 (LamAbs happy_var_2 happy_var_4
+		 (NAbs happy_var_2 happy_var_4
 	) `HappyStk` happyRest
 
 happyReduce_3 = happySpecReduce_2  4 happyReduction_3
 happyReduction_3 (HappyAbsSyn4  happy_var_2)
 	(HappyAbsSyn4  happy_var_1)
 	 =  HappyAbsSyn4
-		 (LamApp happy_var_1 happy_var_2
+		 (NApp happy_var_1 happy_var_2
 	)
 happyReduction_3 _ _  = notHappyAtAll 
 

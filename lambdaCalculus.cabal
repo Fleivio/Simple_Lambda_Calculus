@@ -9,9 +9,9 @@ version:        0.1.0.0
 description:    Please see the README on GitHub at <https://github.com/githubuser/lambdaCalculus#readme>
 homepage:       https://github.com/Fleivio/lambdaCalculus#readme
 bug-reports:    https://github.com/Fleivio/lambdaCalculus/issues
-author:         Author name here
+author:         Fleivio
 maintainer:     example@example.com
-copyright:      2023 Author name here
+copyright:      2023 Fleivio
 license:        BSD-3-Clause
 license-file:   LICENSE
 build-type:     Simple

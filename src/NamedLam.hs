@@ -4,68 +4,70 @@ import Exp
 import Data.List (delete)
 
 data LamExp = 
-		LamVar Char
-  | LamAbs Char LamExp
-  | LamApp LamExp LamExp
-  deriving (Eq)
+	  NVar Char
+	| NAbs Char LamExp
+	| NApp LamExp LamExp
+	deriving (Eq)
 
 instance Show LamExp where
-  show = \case
-    LamVar x     -> [x]
-    LamAbs x t1  -> "\\" ++ [x] ++ "." ++ show t1
-    LamApp t1 t2 -> "((" ++ show t1 ++ ") " ++ show t2 ++ ")"
+	show = \case
+		NVar x     -> [x]
+		NAbs x t1  -> "\\" ++ [x] ++ "." ++ show t1
+		NApp t1 t2 -> "((" ++ show t1 ++ ") " ++ show t2 ++ ")"
 
 -------------------------------------------------------
 
 freevars :: LamExp -> [Char]
 freevars = \case
-  LamVar x     -> [x]
-  LamAbs x t  -> delete x (freevars t)
-  LamApp t p -> freevars t ++ freevars p
+	NVar x   -> [x]
+	NAbs x t -> delete x (freevars t)
+	NApp t p -> freevars t ++ freevars p
 
 boundvars :: LamExp -> [Char]
 boundvars = \case
-  LamVar _    -> []
-  LamAbs x t  -> x : boundvars t
-  LamApp t p -> freevars t <> freevars p
+	NVar _   -> []
+	NAbs x t -> x : boundvars t
+	NApp t p -> freevars t <> freevars p
 
 betaRed :: Char -> LamExp -> LamExp -> LamExp
 betaRed x s = \case 
-  LamVar y 
-    | x == y    -> s
-    | otherwise -> LamVar y
-  LamAbs y t2
-    | x == y              -> LamAbs y t2
-    | y `elem` freevars s -> betaRed x s k
-    | otherwise           -> LamAbs y (betaRed x s t2)
-      where
-        k = let j = genNewVarName (LamAbs y t2) s
-            in LamAbs j (betaRed y (LamVar j) t2)
-  LamApp t1 t2 -> LamApp (betaRed x s t1) (betaRed x s t2)
+	NVar y 
+		| x == y    -> s
+		| otherwise -> NVar y
+	NAbs y t2
+		| x == y              -> NAbs y t2
+		| y `elem` freevars s -> betaRed x s k
+		| otherwise           -> NAbs y (betaRed x s t2)
+			where
+				k = let j = genNewVarName (NAbs y t2) s
+						in NAbs j (betaRed y (NVar j) t2)
+	NApp t1 t2 -> NApp (betaRed x s t1) (betaRed x s t2)
 
 genNewVarName :: LamExp -> LamExp -> Char
 genNewVarName w k = head
-    [ x | x <- ['a' ..], x `notElem` freevars w ++ boundvars w, x `notElem` freevars k]
+		[ x | x <- ['a' ..], x `notElem` freevars w ++ boundvars w, x `notElem` freevars k]
 
 isVal :: LamExp -> Bool
-isVal (LamApp _ _) = False
+isVal (NApp _ _) = False
 isVal _ = True
 
 instance Exp LamExp where
-  callByValue = \case
-    LamApp p@(LamAbs x t) v
-      | isVal v   -> betaRed x v t
-      | otherwise -> LamApp p (callByValue v) 
-    LamApp t1 t2  -> LamApp (callByValue t1) t2
-    a             -> a
+	(·) = NApp
 
-  fullBeta = \case
-    LamApp (LamAbs x t) v -> betaRed x v t
-    LamApp t            p -> LamApp (fullBeta t) (fullBeta p)
-    LamAbs x            t -> LamAbs x (fullBeta t)
-    x                     -> x
+	callByValue = \case
+		NApp p@(NAbs x t) v
+			| isVal v   -> betaRed x v t
+			| otherwise -> NApp p (callByValue v) 
+		NApp t1 t2    -> callByValue t1 · t2
+		a             -> a
 
-  callByName = \case
-    LamApp (LamAbs x t) v -> betaRed x v t
-    LamApp t            p -> LamApp (callByName t) p
-    a                     -> a
+	fullBeta = \case
+		NApp (NAbs x t) v -> betaRed x v t
+		NApp t          p -> fullBeta t · fullBeta p
+		NAbs x          t -> NAbs x (fullBeta t)
+		x                 -> x
+
+	callByName = \case
+		NApp (NAbs x t) v -> betaRed x v t
+		NApp t          p -> NApp (callByName t) p
+		a                 -> a
