@@ -1,6 +1,7 @@
-module BruijnLam(BLamExp(..), module Exp) where
+module BruijnLam(BLamExp(..), module Exp, bfreevars) where
 
 import Exp
+import Data.List (delete)
 
 data BLamExp = 
 	  Var Int
@@ -34,6 +35,12 @@ betaRed s n = shift 0 (-1) $ subst 0 (shift 0 1 s) n
 isVal :: BLamExp -> Bool
 isVal (App _ _) = False
 isVal _ = True
+
+bfreevars :: BLamExp -> [Int]
+bfreevars = \case
+	Var k   -> [k]
+	Abs t   -> delete 0 (bfreevars t)
+	App t p -> bfreevars t ++ bfreevars p
 
 instance Exp BLamExp where 
 	(·) = App

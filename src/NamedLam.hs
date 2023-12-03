@@ -1,4 +1,4 @@
-module NamedLam (LamExp (..), module Exp) where
+module NamedLam (LamExp (..), freevars, module Exp) where
 
 import Exp
 import Data.List (delete)
@@ -12,8 +12,8 @@ data LamExp =
 instance Show LamExp where
 	show = \case
 		NVar x     -> [x]
-		NAbs x t1  -> "\\" ++ [x] ++ "." ++ show t1
-		NApp t1 t2 -> "((" ++ show t1 ++ ") " ++ show t2 ++ ")"
+		NAbs x t1  -> "(λ" ++ [x] ++ ". " ++ show t1 ++ ")"
+		NApp t1 t2 -> "(" ++ show t1 ++ " " ++ show t2 ++ ")"
 
 -------------------------------------------------------
 

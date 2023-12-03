@@ -28,10 +28,11 @@ class (Eq e, Show e) => Exp e where
 
 	----------------------------------------------
 
-	evalPrint :: (e -> e) -> e -> IO ()
+	evalPrint :: (e -> e) -> e -> IO e
 	evalPrint f e = do
-		let (_, s) = runWriter $ evalShow f e
+		let (e', s) = runWriter $ evalShow f e
 		putStrLn $ unlines s
+		return e'
 
 	eval :: (e -> e) -> e -> e
 	eval f e | e == f e  = e

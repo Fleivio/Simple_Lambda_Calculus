@@ -9,7 +9,7 @@ class Conversor a b | a -> b where
 	convert :: a -> b
 
 instance Conversor BLamExp LamExp where
-	convert bjin = runConv bjin 0
+	convert bjin = runConv bjin (maximum $ bfreevars bjin)
 		where 
 		runConv e i = case e of
 			Var k     -> NVar (find (i-k-1))
@@ -21,7 +21,7 @@ instance Conversor BLamExp LamExp where
 		dict = ['a'..]
 
 instance Conversor LamExp BLamExp where
-	convert lexp = runConv lexp []
+	convert lexp = runConv lexp (freevars lexp)
 		where
 		runConv e dict = case e of
 			NVar k     -> Var (find k dict)

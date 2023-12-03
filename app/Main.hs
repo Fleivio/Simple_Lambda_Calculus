@@ -8,28 +8,33 @@ import NamedLam
 import Defines
 import Conversor
 
-evaluatorRunner :: (LamExp -> LamExp) -> IO ()
+import System.IO (hFlush, stdout)
+
+
+evaluatorRunner :: (BLamExp -> BLamExp) -> IO ()
 evaluatorRunner f = do
-	putStr ">"
+	putStr "> "
+	hFlush stdout
 	a <- getLine
-	evalPrint f $ P.parseFull a
+	e' <- evalPrint f $ convert $ P.parseFull a
+	print $ convert e'
 	evaluatorRunner f
 
 main :: IO ()
 main = do
-	let test = b3
-	-- evaluatorRunner
-	putStrLn "Call By Name:"
-	evalPrint callByName $ convert test
-	evalPrint callByName test
+	-- let test = b3
+	evaluatorRunner fullBeta
+	-- putStrLn "Call By Name:"
+	-- evalPrint callByName $ convert test
+	-- evalPrint callByName test
 
-	putStrLn "Call By Value:"
-	evalPrint callByValue $ convert test
-	evalPrint callByValue test
+	-- putStrLn "Call By Value:"
+	-- evalPrint callByValue $ convert test
+	-- evalPrint callByValue test
 
-	putStrLn "Full Beta:"
-	evalPrint fullBeta $ convert test
-	evalPrint fullBeta test
+	-- putStrLn "Full Beta:"
+	-- evalPrint fullBeta $ convert test
+	-- evalPrint fullBeta test
 
 a0 = lId · (lId · (Abs (lId · Var 0)))
 
