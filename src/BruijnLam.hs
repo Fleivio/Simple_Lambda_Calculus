@@ -3,7 +3,7 @@ module BruijnLam(BLamExp(..), (.:), module Exp) where
 import Exp
 
 data BLamExp = 
-		Var Int
+	  Var Int
 	| App BLamExp BLamExp
 	| Abs BLamExp
 	deriving (Eq)

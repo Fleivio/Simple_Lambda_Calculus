@@ -1,5 +1,4 @@
 {-# LANGUAGE FlexibleInstances #-}
--- {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FunctionalDependencies #-}
 module Conversor(Conversor(..)) where
 

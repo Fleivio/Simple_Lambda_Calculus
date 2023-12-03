@@ -24,7 +24,6 @@ dependencies:
 - array
 - mtl
 
-
 ghc-options:
 - -Wall
 - -Wcompat
@@ -40,7 +39,8 @@ library:
   source-dirs: src
   ghc-options:
   - -fno-warn-tabs
-  - -XLambdaCase
+  default-extensions: 
+  - LambdaCase
 
 executables:
   lambdaCalculus-exe:
